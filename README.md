@@ -12,4 +12,5 @@ university project
 
 ## Start
 1. Create file .env
-2. 
+2. Copy all from .env.example into .env
+3. Change DB_DATABASE, DB_USERNAME and DB_PASSWORD
