@@ -16,9 +16,8 @@ class CreateUnivTable extends Migration
         Schema::create('univ', function (Blueprint $table) {
             $table->id();
             $table->string('univ')->unique();
-            $table->string('full_univ');
-            $table->json('menu');
-            $table->json('daily_menu');
+            $table->json('menu')->nullable();
+            $table->json('daily_menu')->nullable();
         });
     }
 

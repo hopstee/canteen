@@ -6,22 +6,32 @@
     <div class="card">
         <div class="card-body">
             <h2 class="card-title">
-                Меню
+                Дополнительное меню
             </h2>
-            <div class="grid">
+            @if(isset($menu[0]->menu))
                 @foreach($menu[0]->menu as $item)
-                    <div class="card card-float" data-price="{{ $item->price }}" data-good="{{ $item->title }}">
-                        <div class="card-body">
-                            <div class="card-title">
-                                Товар: {{ $item->title }}
+                    <h3 class="card-title">{{ $item->name }}</h3>
+                    <div class="grid">
+                        @foreach($item->menu as $i)
+                            <div class="card card-float" data-price="{{ $i->price }}" data-good="{{ $i->name }}">
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        Товар: {{ $i->name }}
+                                    </div>
+                                    <p class="card-text">
+                                        Цена: {{ $i->price }}
+                                    </p>
+                                </div>
                             </div>
-                            <p class="card-text">
-                                Цена: {{ $item->price }}
-                            </p>
-                        </div>
+                        @endforeach
                     </div>
+                    <div class="delimeter"></div>
                 @endforeach
-            </div>
+            @else
+                <p class="card-text">
+                    Меню отсутствует
+                </p>
+            @endif
         </div>
     </div>
 
@@ -32,24 +42,30 @@
             <h2 class="card-title">
                 Ежедневное меню
             </h2>
-            @foreach($menu[0]->daily_menu as $item)
-                <h3 class="card-title">{{ $item->title }}</h3>
-                <div class="grid">
-                    @foreach($item->menu as $i)
-                        <div class="card card-float" data-price="{{ $i->price }}" data-good="{{ $i->title }}">
-                            <div class="card-body">
-                                <div class="card-title">
-                                    Товар: {{ $i->title }}
+            @if(isset($menu[0]->daily_menu))
+                @foreach($menu[0]->daily_menu as $item)
+                    <h3 class="card-title">{{ $item->name }}</h3>
+                    <div class="grid">
+                        @foreach($item->menu as $i)
+                            <div class="card card-float" data-price="{{ $i->price }}" data-good="{{ $i->name }}">
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        Товар: {{ $i->name }}
+                                    </div>
+                                    <p class="card-text">
+                                        Цена: {{ $i->price }}
+                                    </p>
                                 </div>
-                                <p class="card-text">
-                                    Цена: {{ $i->price }}
-                                </p>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
-                <div class="delimeter"></div>
-            @endforeach
+                        @endforeach
+                    </div>
+                    <div class="delimeter"></div>
+                @endforeach
+            @else
+                <p class="card-text">
+                    Меню отсутствует
+                </p>
+            @endif
         </div>
     </div>
 </div>

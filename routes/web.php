@@ -24,14 +24,21 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get("/home/menu/create", function() {
-    return view('dashboard.create');
+Route::get("/home/menu/daily/create", function() {
+    return view('dashboard.menu.create.daily');
 });
-Route::post("/home/menu/create", "HomeController@create");
-
-Route::get("/home/menu/update", function() {
-    return view('dashboard.update');
+Route::get("/home/menu/add/create", function() {
+    return view('dashboard.menu.create.add');
 });
-Route::post("/home/menu/update", "HomeController@update");
+Route::post("/home/menu/{type}/create", "HomeController@create");
+Route::post("/home/menu/{type}/create", "HomeController@create");
 
-Route::post("/home/menu/delete", "HomeController@delete");
+Route::get("/home/menu/daily/update", function() {
+    return view('dashboard.menu.update.daily');
+});
+Route::get("/home/menu/add/update", function() {
+    return view('dashboard.menu.update.add');
+});
+Route::post("/home/menu/{type}/update", "HomeController@update");
+
+Route::get("/home/menu/{type}/delete", "HomeController@delete");

@@ -11,17 +11,18 @@ class MenuController extends Controller
 {
     public function univs() 
     {
-        $univs = Menu::select('univ', 'full_univ')->get();
+        $univs = Menu::select('univ')->get();
         $univs = json_decode($univs);
         return view('pages.univs')->with('univs', $univs);
     }
 
     public function menu($name) 
     {
-        $menu = Menu::select('univ', 'full_univ', 'menu', 'daily_menu')->where('univ', $name)->get();
+        $menu = Menu::select('univ', 'menu', 'daily_menu')->where('univ', $name)->get();
         $menu = json_decode($menu);
         $menu[0]->menu = json_decode($menu[0]->menu);
         $menu[0]->daily_menu = json_decode($menu[0]->daily_menu);
+        // var_dump($menu[0]->daily_menu[0]);die();
         return view('pages.menu')->with('menu', $menu);
     }
 
