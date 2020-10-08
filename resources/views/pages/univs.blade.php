@@ -16,9 +16,6 @@
                     <h5 class="card-title">
                         {{ $univ->univ }}
                     </h5>
-                    <p class="card-text">
-                        {{ $univ->full_univ }}
-                    </p>
                     <a href="/univs/menu/{{ $univ->univ }}" class="btn btn-primary">
                         Посмотреть меню
                     </a>

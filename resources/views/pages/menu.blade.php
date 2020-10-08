@@ -6,22 +6,32 @@
     <div class="card">
         <div class="card-body">
             <h2 class="card-title">
-                Меню
+                Дополнительное меню
             </h2>
-            <div class="grid">
+            @if(isset($menu[0]->menu))
                 @foreach($menu[0]->menu as $item)
-                    <div class="card card-float" data-price="{{ $item->price }}" data-good="{{ $item->title }}">
-                        <div class="card-body">
-                            <div class="card-title">
-                                Товар: {{ $item->title }}
+                    <h3 class="card-title">{{ $item->name }}</h3>
+                    <div class="grid">
+                        @foreach($item->menu as $i)
+                            <div class="card card-float" data-price="{{ $i->price }}" data-good="{{ $i->name }}">
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        Товар: {{ $i->name }}
+                                    </div>
+                                    <p class="card-text">
+                                        Цена: {{ $i->price }}
+                                    </p>
+                                </div>
                             </div>
-                            <p class="card-text">
-                                Цена: {{ $item->price }}
-                            </p>
-                        </div>
+                        @endforeach
                     </div>
+                    <div class="delimeter"></div>
                 @endforeach
-            </div>
+            @else
+                <p class="card-text">
+                    Меню отсутствует
+                </p>
+            @endif
         </div>
     </div>
 
@@ -32,69 +42,119 @@
             <h2 class="card-title">
                 Ежедневное меню
             </h2>
-            @foreach($menu[0]->daily_menu as $item)
-                <h3 class="card-title">{{ $item->title }}</h3>
-                <div class="grid">
-                    @foreach($item->menu as $i)
-                        <div class="card card-float" data-price="{{ $i->price }}" data-good="{{ $i->title }}">
-                            <div class="card-body">
-                                <div class="card-title">
-                                    Товар: {{ $i->title }}
+            @if(isset($menu[0]->daily_menu))
+                @foreach($menu[0]->daily_menu as $item)
+                    <h3 class="card-title">{{ $item->name }}</h3>
+                    <div class="grid">
+                        @foreach($item->menu as $i)
+                            <div class="card card-float" data-price="{{ $i->price }}" data-good="{{ $i->name }}">
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        Товар: {{ $i->name }}
+                                    </div>
+                                    <p class="card-text">
+                                        Цена: {{ $i->price }}
+                                    </p>
                                 </div>
-                                <p class="card-text">
-                                    Цена: {{ $i->price }}
-                                </p>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
-                <div class="delimeter"></div>
-            @endforeach
+                        @endforeach
+                    </div>
+                    <div class="delimeter"></div>
+                @endforeach
+            @else
+                <p class="card-text">
+                    Меню отсутствует
+                </p>
+            @endif
         </div>
     </div>
 </div>
 
 <div class="add-list">
     <div class="card shadow">
-        <div class="card-body centered flex-row justify-content-between">
-            <div class="card-title">
-                Сумма: <span id="sum">0</span>
+        <div class="card-body centered justify-content-between btn-group-vertical dropdown">
+            <div class="d-flex justify-content-between w-100">
+                <div class="card-title">
+                    Сумма: <span id="sum">0</span>
+                </div>
+                <div>
+                    <a class="dropdown-toggle mr-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="toggle_menu" href="#" class="card-link">Показать</a>
+                    <a id="clean_sum" href="#" class="card-link">Очистить</a>
+                </div>
             </div>
-            <a id="clean_sum" href="#" class="card-link">Очистить</a>
+            <ul class="dropdown-menu" aria-labelledby="toggle_menu" id="list"></ul>
         </div>
     </div>
 </div>
 
 <script>
-    var sum = document.getElementById('sum');
-    var clean_sum = document.getElementById('clean_sum');
-    var list = document.getElementById('add_list');
-    var goods = document.querySelectorAll(".card-float");
+    const sum = document.getElementById('sum');
+    const clean_sum = document.getElementById('clean_sum');
+    const list = document.getElementById('add_list');
+    const goods = document.querySelectorAll(".card-float");
+    const ul = document.getElementById('list')
 
+    let itemsArray = localStorage.getItem('items')
+        ? JSON.parse(localStorage.getItem('items'))
+        : [];
+
+    let total = localStorage.getItem('totalSum')
+        ? localStorage.getItem('totalSum')
+        : 0;
+
+    localStorage.setItem('items', JSON.stringify(itemsArray));
+    localStorage.setItem('total', total);
+
+    const liMaker = (name, price) => {
+        const li = document.createElement('li');
+        li.classList.add('dropdown-item');
+        li.textContent = name + ": " + price;
+        ul.appendChild(li);
+    }
+
+    setPrice(total);
+    displayList();
 
     goods.forEach(good => {
         good.addEventListener('click', function() {
             let g = good.getAttribute('data-good');
             let p = Number(good.getAttribute('data-price'));
-            let total = Number(sum.textContent);
 
-            total = total + p;
-            sum.innerHTML = total;
+            total = Number(total) + p;
+            setPrice(total);
 
-            // if(localStorage.getItem(`${g}`) === null) {
-            //     localStorage.setItem(`${g}`, p);
-            // } else {
-            //     let old_value = localStorage.getItem(`${g}`);
-            //     let new_value = Number(old_value) + Number(p);
-            //     localStorage.setItem(`${g}`, new_value);
-            // }
+            itemsArray.push({"name": g, "price": p});
+            localStorage.setItem('items', JSON.stringify(itemsArray));
+            localStorage.setItem('total', total);
+
+            displayList();
         });
     });
 
     clean_sum.addEventListener('click', (e) => {
         e.preventDefault();
-        sum.innerHTML = 0;
+        total = 0;
+        itemsArray = [];
+        sum.innerHTML = total;
+        localStorage.setItem('items', '');
+        localStorage.setItem('total', total);
+
+        displayList();
+        setPrice(0);
     });
+
+    function displayList()
+    {
+        ul.innerHTML = '';
+        itemsArray.forEach((item) => {
+            liMaker(item.name, item.price);
+        })
+    }
+
+    function setPrice(price)
+    {
+        sum.innerHTML = price;
+    }
 </script>
 
 @endsection('content')

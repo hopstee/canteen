@@ -57,7 +57,7 @@ html, body {
 }
 
 .add-list {
-    position: fixed;
+    position: fixed !important;
     bottom: 0;
     padding: 15px;
     width: 100%;
