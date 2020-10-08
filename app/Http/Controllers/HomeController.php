@@ -30,7 +30,10 @@ class HomeController extends Controller
         $menu = Menu::select('menu')->where('univ', $name)->get();
         $daily_menu = Menu::select('daily_menu')->where('univ', $name)->get();
 
-        return view('home')->with('menu', $menu[0]['menu'])->with('daily_menu', $daily_menu[0]['daily_menu'])->with('name', $name);
+        $menu = (count($menu) == 0 ? null : $menu[0]['menu'] == null) ? null : $menu[0]['menu'];
+        $daily_menu = (count($daily_menu) == 0 ? null : $daily_menu[0]['daily_menu'] == null) ? null : $daily_menu[0]['daily_menu'];
+
+        return view('home')->with('menu', $menu)->with('daily_menu', $daily_menu)->with('name', $name);
     }
 
     public function create(Request $request, $type)
